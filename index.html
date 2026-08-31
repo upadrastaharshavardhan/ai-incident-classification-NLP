@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Intelligent IT Incident Classification & Priority Prediction</title>
+
+<meta name="description"
+content="Research Project 02 — Intelligent IT Incident Classification and Priority Prediction using Natural Language Processing.">
+
+<style>
+:root {
+    --bg: #070b14;
+    --bg-soft: #0d1320;
+    --panel: rgba(17, 25, 40, 0.78);
+    --panel-solid: #111927;
+    --border: rgba(255,255,255,0.09);
+    --text: #f4f7fb;
+    --muted: #9aa8bb;
+    --primary: #7c5cff;
+    --secondary: #00d4ff;
+    --green: #19d3ae;
+    --orange: #ffb454;
+    --red: #ff6b81;
+    --max: 1180px;
+    --radius: 22px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(124,92,255,.18), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(0,212,255,.12), transparent 28%),
+        var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.container {
+    width: min(92%, var(--max));
+    margin: auto;
+}
+
+/* NAVBAR */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(18px);
+    background: rgba(7,11,20,.72);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.logo span {
+    color: var(--secondary);
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.nav-links a {
+    transition: .25s ease;
+}
+
+.nav-links a:hover {
+    color: var(--text);
+}
+
+/* HERO */
+
+.hero {
+    min-height: 760px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: rgba(124,92,255,.12);
+    filter: blur(90px);
+    top: 0;
+    right: -200px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 850px;
+}
+
+.badge {
+    display: inline-flex;
+    padding: 8px 14px;
+    border: 1px solid rgba(124,92,255,.35);
+    background: rgba(124,92,255,.08);
+    border-radius: 999px;
+    color: #c9c0ff;
+    font-size: .85rem;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: .95;
+    letter-spacing: -5px;
+    margin-bottom: 30px;
+}
+
+.gradient {
+    background: linear-gradient(
+        100deg,
+        #fff,
+        #a99aff,
+        #62e8ff
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-description {
+    color: var(--muted);
+    font-size: 1.15rem;
+    max-width: 720px;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 35px;
+}
+
+.btn {
+    padding: 13px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    transition: transform .25s, border-color .25s;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    border-color: rgba(124,92,255,.6);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), #5f43db);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,.04);
+}
+
+/* METRICS */
+
+.metrics {
+    margin-top: -80px;
+    position: relative;
+    z-index: 5;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.metric {
+    padding: 25px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(18px);
+    transition: transform .3s ease;
+}
+
+.metric:hover {
+    transform: translateY(-8px);
+}
+
+.metric-value {
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.metric-label {
+    color: var(--muted);
+    font-size: .85rem;
+    margin-top: 5px;
+}
+
+/* SECTIONS */
+
+section {
+    padding: 110px 0;
+}
+
+.section-header {
+    max-width: 760px;
+    margin-bottom: 50px;
+}
+
+.eyebrow {
+    color: var(--secondary);
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: clamp(2.2rem, 4vw, 4rem);
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin-bottom: 18px;
+}
+
+.section-header p {
+    color: var(--muted);
+}
+
+/* CARDS */
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.card {
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,.055),
+        rgba(255,255,255,.018)
+    );
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 30px;
+    transition: .3s ease;
+}
+
+.card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(124,92,255,.4);
+}
+
+.card-icon {
+    font-size: 2rem;
+    margin-bottom: 18px;
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: var(--muted);
+    font-size: .94rem;
+}
+
+/* PIPELINE */
+
+.pipeline {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    align-items: stretch;
+}
+
+.step {
+    background: var(--panel-solid);
+    border: 1px solid var(--border);
+    padding: 25px 15px;
+    border-radius: 16px;
+    text-align: center;
+    position: relative;
+}
+
+.step-number {
+    color: var(--primary);
+    font-weight: 900;
+    font-size: .75rem;
+}
+
+.step-title {
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.step-desc {
+    color: var(--muted);
+    font-size: .75rem;
+    margin-top: 7px;
+}
+
+/* ARCHITECTURE */
+
+.architecture {
+    background:
+        linear-gradient(
+            180deg,
+            transparent,
+            rgba(124,92,255,.04),
+            transparent
+        );
+}
+
+.arch-box {
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background: #090f1b;
+    padding: 40px;
+    overflow-x: auto;
+}
+
+.arch {
+    min-width: 800px;
+    display: grid;
+    gap: 12px;
+}
+
+.arch-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.node {
+    min-width: 150px;
+    padding: 18px;
+    text-align: center;
+    border: 1px solid rgba(124,92,255,.3);
+    background: rgba(124,92,255,.08);
+    border-radius: 14px;
+    font-weight: 700;
+}
+
+.node.highlight {
+    border-color: rgba(0,212,255,.4);
+    background: rgba(0,212,255,.07);
+}
+
+.arrow {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1.4rem;
+}
+
+/* TABLE */
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th, td {
+    padding: 18px 22px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    color: var(--muted);
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    font-weight: 600;
+}
+
+.score {
+    color: var(--green);
+    font-weight: 900;
+}
+
+/* REPOSITORY */
+
+.repo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.repo-card {
+    padding: 25px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+}
+
+.repo-card code {
+    color: #9edcff;
+    font-family: monospace;
+}
+
+.repo-card p {
+    color: var(--muted);
+    margin-top: 10px;
+}
+
+/* FUTURE */
+
+.future {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 14px;
+}
+
+.future-item {
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: rgba(255,255,255,.025);
+}
+
+.future-item span {
+    font-size: 1.5rem;
+}
+
+.future-item h3 {
+    margin-top: 12px;
+    font-size: 1rem;
+}
+
+.future-item p {
+    color: var(--muted);
+    font-size: .85rem;
+    margin-top: 7px;
+}
+
+/* CTA */
+
+.cta {
+    text-align: center;
+    padding: 90px 30px;
+    border-radius: 30px;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(124,92,255,.2),
+            transparent 65%
+        ),
+        #0c1220;
+    border: 1px solid var(--border);
+}
+
+.cta p {
+    color: var(--muted);
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* FOOTER */
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+    color: var(--muted);
+    font-size: .85rem;
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* REVEAL */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity .8s ease, transform .8s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 900px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .metric-grid,
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pipeline {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .future {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media(max-width: 600px) {
+
+    h1 {
+        letter-spacing: -3px;
+    }
+
+    section {
+        padding: 80px 0;
+    }
+
+    .metric-grid,
+    .card-grid,
+    .repo-grid,
+    .future {
+        grid-template-columns: 1fr;
+    }
+
+    .pipeline {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .hero {
+        min-height: 650px;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+    }
+
+    .arch-box {
+        padding: 20px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header class="navbar">
+<div class="container nav-inner">
+
+<div class="logo">
+🧠 Incident<span>AI</span>
+</div>
+
+<nav class="nav-links">
+<a href="#research">Research</a>
+<a href="#architecture">Architecture</a>
+<a href="#results">Results</a>
+<a href="#repository">Repository</a>
+</nav>
+
+</div>
+</header>
+
+<main>
+
+<!-- HERO -->
+
+<section class="hero">
+<div class="container">
+
+<div class="hero-content">
+
+<div class="badge">
+RESEARCH PROJECT 02 · NLP + MACHINE LEARNING
+</div>
+
+<h1>
+Intelligent IT Incident
+<span class="gradient">Classification</span>
+&
+Priority Prediction
+</h1>
+
+<p class="hero-description">
+An NLP-driven research system designed to transform unstructured
+IT incident descriptions into structured operational intelligence —
+classification, priority prediction, and historical incident retrieval.
+</p>
+
+<div class="buttons">
+
+<a
+class="btn btn-primary"
+href="https://github.com/upadrastaharshavardhan/ai-incident-classification-NLP"
+target="_blank">
+View GitHub Repository → </a>
+
+<a
+class="btn btn-secondary"
+href="#results">
+Explore Research </a>
+
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- METRICS -->
+
+<section class="metrics">
+<div class="container">
+
+<div class="metric-grid">
+
+<div class="metric reveal">
+<div class="metric-value">95.38%</div>
+<div class="metric-label">Category Accuracy</div>
+</div>
+
+<div class="metric reveal">
+<div class="metric-value">0.953</div>
+<div class="metric-label">Category Macro F1</div>
+</div>
+
+<div class="metric reveal">
+<div class="metric-value">92.13%</div>
+<div class="metric-label">Priority Accuracy</div>
+</div>
+
+<div class="metric reveal">
+<div class="metric-value">96.8%</div>
+<div class="metric-label">Retrieval Recall@5</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- RESEARCH -->
+
+<section id="research">
+
+<div class="container">
+
+<div class="section-header reveal">
+
+<div class="eyebrow">Research Problem</div>
+
+<h2>
+Turning incident text into operational intelligence.
+</h2>
+
+<p>
+IT organizations process large volumes of unstructured incident
+descriptions. Understanding category, urgency, and historical context
+manually creates delays and inconsistency.
+</p>
+
+</div>
+
+<div class="card-grid">
+
+<div class="card reveal">
+<div class="card-icon">🏷️</div>
+<h3>Incident Classification</h3>
+<p>
+Automatically identify the most likely operational category
+from natural-language incident descriptions.
+</p>
+</div>
+
+<div class="card reveal">
+<div class="card-icon">🚨</div>
+<h3>Priority Prediction</h3>
+<p>
+Estimate incident urgency to support faster triage,
+queue optimization, and escalation decisions.
+</p>
+</div>
+
+<div class="card reveal">
+<div class="card-icon">🔎</div>
+<h3>Similar Incident Retrieval</h3>
+<p>
+Find historically related incidents so engineers can reuse
+knowledge and investigate recurring problems faster.
+</p>
+</div>
+
+</div>
+</div>
+
+</section>
+
+<!-- PIPELINE -->
+
+<section>
+
+<div class="container">
+
+<div class="section-header reveal">
+
+<div class="eyebrow">Research Pipeline</div>
+
+<h2>From raw incident to intelligent decision.</h2>
+
+</div>
+
+<div class="pipeline">
+
+<div class="step reveal">
+<div class="step-number">01</div>
+<div class="step-title">Incident Data</div>
+<div class="step-desc">Raw operational text</div>
+</div>
+
+<div class="step reveal">
+<div class="step-number">02</div>
+<div class="step-title">Processing</div>
+<div class="step-desc">Cleaning & validation</div>
+</div>
+
+<div class="step reveal">
+<div class="step-number">03</div>
+<div class="step-title">NLP</div>
+<div class="step-desc">Text representation</div>
+</div>
+
+<div class="step reveal">
+<div class="step-number">04</div>
+<div class="step-title">Prediction</div>
+<div class="step-desc">Category + priority</div>
+</div>
+
+<div class="step reveal">
+<div class="step-number">05</div>
+<div class="step-title">Retrieval</div>
+<div class="step-desc">Historical similarity</div>
+</div>
+
+<div class="step reveal">
+<div class="step-number">06</div>
+<div class="step-title">Evaluation</div>
+<div class="step-desc">Metrics + ablation</div>
+</div>
+
+</div>
+</div>
+
+</section>
+
+<!-- ARCHITECTURE -->
+
+<section id="architecture" class="architecture">
+
+<div class="container">
+
+<div class="section-header reveal">
+
+<div class="eyebrow">System Architecture</div>
+
+<h2>A modular NLP research architecture.</h2>
+
+<p>
+The system separates preprocessing, prediction, retrieval,
+and evaluation so individual components can be experimentally analyzed.
+</p>
+
+</div>
+
+<div class="arch-box reveal">
+
+<div class="arch">
+
+<div class="arch-row">
+<div class="node highlight">
+Raw IT Incident
+</div>
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="arch-row">
+<div class="node">Data Processing</div>
+<div class="node">NLP Pipeline</div>
+<div class="node">Feature Engineering</div>
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="arch-row">
+<div class="node">Category Model</div>
+<div class="node">Priority Model</div>
+<div class="node">Retrieval Engine</div>
+</div>
+
+<div class="arrow">↓</div>
+
+<div class="arch-row">
+<div class="node highlight">
+Evaluation & Research Analysis
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- RESULTS -->
+
+<section id="results">
+
+<div class="container">
+
+<div class="section-header reveal">
+
+<div class="eyebrow">Experimental Results</div>
+
+<h2>Measured performance across multiple tasks.</h2>
+
+<p>
+The research package evaluates classification, priority prediction,
+and semantic retrieval rather than relying on a single metric.
+</p>
+
+</div>
+
+<div class="table-wrap reveal">
+
+<table>
+
+<thead>
+<tr>
+<th>Task</th>
+<th>Metric</th>
+<th>Result</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Category Classification</td>
+<td>Accuracy</td>
+<td class="score">95.38%</td>
+</tr>
+
+<tr>
+<td>Category Classification</td>
+<td>Macro F1</td>
+<td class="score">0.953</td>
+</tr>
+
+<tr>
+<td>Priority Classification</td>
+<td>Accuracy</td>
+<td class="score">92.13%</td>
+</tr>
+
+<tr>
+<td>Priority Classification</td>
+<td>Macro F1</td>
+<td class="score">0.918</td>
+</tr>
+
+<tr>
+<td>Incident Retrieval</td>
+<td>MRR@5</td>
+<td class="score">0.887</td>
+</tr>
+
+<tr>
+<td>Incident Retrieval</td>
+<td>Recall@5</td>
+<td class="score">0.968</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- RESEARCH PACKAGE -->
+
+<section>
+
+<div class="container">
+
+<div class="section-header reveal">
+
+<div class="eyebrow">Research Package</div>
+
+<h2>Everything required to inspect the research.</h2>
+
+</div>
+
+<div class="repo-grid">
+
+<div class="repo-card reveal">
+<h3>📄 Research Paper</h3>
+<p>
+Complete research document covering methodology,
+experiments, analysis, limitations and reproducibility.
+</p>
+</div>
+
+<div class="repo-card reveal">
+<h3>🧪 Methodology</h3>
+<p>
+Detailed description of data processing, NLP pipeline,
+experimentation and evaluation methodology.
+</p>
+</div>
+
+<div class="repo-card reveal">
+<h3>📊 Results</h3>
+<p>
+Machine-readable CSV files containing classification,
+priority and ablation-study results.
+</p>
+</div>
+
+<div class="repo-card reveal">
+<h3>💻 Codebase</h3>
+<p>
+Full implementation containing source code, scripts,
+notebooks and configuration.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- FUTURE -->
+
+<section>
+
+<div class="container">
+
+<div class="section-header reveal">
+
+<div class="eyebrow">Future Research</div>
+
+<h2>Where this system can evolve.</h2>
+
+</div>
+
+<div class="future">
+
+<div class="future-item reveal">
+<span>🤖</span>
+<h3>LLM Reasoning</h3>
+<p>Use language models for deeper incident interpretation.</p>
+</div>
+
+<div class="future-item reveal">
+<span>📚</span>
+<h3>RAG</h3>
+<p>Ground incident reasoning in historical operational knowledge.</p>
+</div>
+
+<div class="future-item reveal">
+<span>🧩</span>
+<h3>Agentic IT Operations</h3>
+<p>Move from prediction toward autonomous investigation workflows.</p>
+</div>
+
+<div class="future-item reveal">
+<span>🔄</span>
+<h3>Continuous Learning</h3>
+<p>Learn from new incidents and human triage decisions.</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CTA -->
+
+<section>
+
+<div class="container">
+
+<div class="cta reveal">
+
+<div class="eyebrow">Explore the Research</div>
+
+<h2>
+Build the next generation of intelligent IT operations.
+</h2>
+
+<p>
+Explore the complete implementation, research paper,
+experimental results and methodology.
+</p>
+
+<div class="buttons" style="justify-content:center;">
+
+<a
+class="btn btn-primary"
+href="https://github.com/upadrastaharshavardhan/ai-incident-classification-NLP"
+target="_blank">
+Open GitHub → </a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+<div class="container footer-inner">
+
+<div>
+<strong>🧠 Intelligent IT Incident Classification</strong>
+<br>
+Research Project 02 · August 2026
+</div>
+
+<div>
+MIT License · NLP · Machine Learning · IT Operations
+</div>
+
+</div>
+
+</footer>
+
+<script>
+
+const observer = new IntersectionObserver(
+(entries) => {
+
+entries.forEach(entry => {
+
+if (entry.isIntersecting) {
+entry.target.classList.add("visible");
+}
+
+});
+
+},
+{
+threshold: 0.12
+}
+);
+
+document
+.querySelectorAll(".reveal")
+.forEach(element => observer.observe(element));
+
+</script>
+
+</body>
+</html>
